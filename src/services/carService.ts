@@ -7,9 +7,10 @@ async function getCars() {
   return cars;
 }
 
-async function getCar(id: number) {
+async function getCar(id: number){
   const car = await carRepository.getCar(id);
-  if (!car) {
+
+  if (car === undefined) {
     throw notFoundError();
   }
 
@@ -30,11 +31,22 @@ async function deleteCar(id: number) {
   await carRepository.deleteCar(id);
 }
 
+async function updateCar(id: number, model: string, licensePlate: string, year: number, color: string){
+  const car = await carRepository.getCarWithLicensePlate(licensePlate);
+
+  if (car === undefined) {
+    throw notFoundError();
+  }
+
+  await carRepository.updateCar(id, model, licensePlate, year, color);
+}
+
 const carService = {
   getCars,
   getCar,
   createCar,
-  deleteCar
+  deleteCar,
+  updateCar
 }
 
 export default carService;
