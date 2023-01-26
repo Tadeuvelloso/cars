@@ -57,11 +57,28 @@ async function deleteCar(req: Request, res: Response) {
   }
 }
 
+async function updateCar(req: Request, res: Response) {
+  const { id, model, licensePlate, year, color } = req.body;
+
+  try {
+    await carService.updateCar(id, model, licensePlate, year, color)
+    res.sendStatus(httpStatus.CREATED);
+  } catch (e) {
+    console.log(e);
+    if (e.name === "ConflictError") {
+      return res.sendStatus(httpStatus.CONFLICT);
+    }
+
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
 const carController = {
   getAllCars,
   getSpecificCar,
   createCar,
-  deleteCar
+  deleteCar,
+  updateCar
 }
 
 export default carController;
